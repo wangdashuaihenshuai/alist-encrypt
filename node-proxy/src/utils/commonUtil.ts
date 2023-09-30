@@ -101,7 +101,13 @@ export function decodeFolderName(password: string, encType: string, encodeName: 
 export function pathFindPasswd(passwdList: PasswdInfo[], url: string) {
   for (const passwdInfo of passwdList) {
     for (const filePath of passwdInfo.encPath) {
-      const result = passwdInfo.enable ? pathToRegexp(new RegExp(filePath)).exec(url) : null
+      let result = null
+      if (filePath.startsWith('/') && url.startsWith(filePath)) {
+        result = { index: 0, input: filePath }
+      } else {
+        result = passwdInfo.enable ? pathToRegexp(new RegExp(filePath)).exec(url) : null
+      }
+
       if (result) {
         // check folder name is can decode
         // getPassInfo()
